@@ -3,8 +3,18 @@ message: "If you use this software, please cite it."
 title: "ESP32 Accelerator Experiments"
 type: software
 authors:
-  - name: "comqas"
-version: "1.0.0"
+  - family-names: "Shafarenko"
+    given-names: "Alex"
+version: "1.0-benchmark"
 date-released: "2026-02-11"
 license: "GPL-3.0-or-later"
 repository-code: "https://github.com/comqas/ESP32-accelerator-experiments"
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Shafarenko"
+      given-names: "Alex"
+  title: "ESP32 Accelerator Experiments"
+  year: 2026
+  version: "v1.0-benchmark"
+  url: "https://github.com/comqas/ESP32-accelerator-experiments"

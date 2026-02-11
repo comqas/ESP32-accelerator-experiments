@@ -4,6 +4,7 @@
 #include "esp_system.h"
 #include "esp_task_wdt.h"
 #include "rsa_hw.h"
+#include "sha_benchmark.h"
 
 void app_main(void) {
     printf("\n\n");
@@ -17,9 +18,9 @@ void app_main(void) {
     printf("  Free Heap: %" PRIu32 " bytes\n", esp_get_free_heap_size());
     printf("  RSA 4096-bit: %d words, %d bytes\n", RSA_4096_WORDS, RSA_4096_BYTES);
     
-    // Step 1: Test basic memory access (WORKING)
+    // Stage 1: Test basic memory access (WORKING)
     printf("\n══════════════════════════════════════════\n");
-    printf("Step 1: Basic Memory Access Test\n");
+    printf("Stage 1: Basic Memory Access Test\n");
     printf("══════════════════════════════════════════\n");
     
     // Use the return value to avoid unused variable warning
@@ -30,9 +31,9 @@ void app_main(void) {
     
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     
-    // Step 2: Correctness checks vs software reference (small values)
+    // Stage 2: Correctness checks vs software reference (small values)
     printf("\n══════════════════════════════════════════\n");
-    printf("Step 2: Correctness Checks\n");
+    printf("Stage 2: Correctness Checks\n");
     printf("══════════════════════════════════════════\n");
 
     if (!verify_hw_sw_small_mult(5) || !verify_hw_sw_small_exp(5)) {
@@ -42,18 +43,18 @@ void app_main(void) {
 
     vTaskDelay(1000 / portTICK_PERIOD_MS);
 
-    // Step 3: Debug simple hardware test
+    // Stage 3: Debug simple hardware test
     printf("\n══════════════════════════════════════════\n");
-    printf("Step 3: Debug Hardware Operation\n");
+    printf("Stage 3: Debug Hardware Operation\n");
     printf("══════════════════════════════════════════\n");
     
     debug_simple_hardware_test();
     
     vTaskDelay(1000 / portTICK_PERIOD_MS);
     
-    // Step 4: Run benchmarks (fixed modulus, precomputed Montgomery constants)
+    // Stage 4: Run benchmarks (fixed modulus, precomputed Montgomery constants)
     printf("\n══════════════════════════════════════════\n");
-    printf("Step 4: Performance Benchmarks\n");
+    printf("Stage 4: Performance Benchmarks\n");
     printf("══════════════════════════════════════════\n");
 
     if (esp_task_wdt_deinit() == ESP_OK) {
@@ -72,6 +73,14 @@ void app_main(void) {
 
     benchmark_suite_fixed_mod(2048, iter_mult_2048, iter_exp_small_2048, iter_exp_full_2048);
     benchmark_suite_fixed_mod(4096, iter_mult_4096, iter_exp_small_4096, iter_exp_full_4096);
+
+    printf("\n══════════════════════════════════════════\n");
+    printf("Stage 5: SHA Benchmarks\n");
+    printf("══════════════════════════════════════════\n");
+
+    benchmark_sha256_lengths(100);
+    benchmark_full_domain_hash(2048, 50);
+    benchmark_full_domain_hash(4096, 50);
     
     printf("\n══════════════════════════════════════════\n");
     printf("Benchmark Complete!\n");
