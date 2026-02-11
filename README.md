@@ -1,53 +1,34 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-C5 | ESP32-C6 | ESP32-C61 | ESP32-H2 | ESP32-H21 | ESP32-H4 | ESP32-P4 | ESP32-S2 | ESP32-S3 | Linux |
-| ----------------- | ----- | -------- | -------- | -------- | -------- | --------- | -------- | --------- | -------- | -------- | -------- | -------- | ----- |
+# ESP32 Accelerator Experiments
 
-# Hello World Example
+Benchmarks for 2048- and 4096-bit modular multiplication and modular exponentiation using the ESP32 RSA hardware accelerator. This project was built to support the ARUP protocol experiments and emphasizes fixed-modulus measurements with precomputed Montgomery constants.
 
-Starts a FreeRTOS task to print "Hello World".
+**What it measures**
+- Modular multiplication with a fixed modulus (random multiplicands only)
+- Modular exponentiation with a small exponent near 20000 (product of up to 5 primes > 2)
+- Modular exponentiation with a full-domain exponent (random full-length exponent)
 
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
+**Key methodology**
+- The modulus is fixed per bit-size during each benchmark suite run.
+- Montgomery constants (`Rinv`, `Mprime`) are precomputed once per modulus.
+- Output includes per-iteration CSV rows and summary CSV lines.
 
-## How to use example
-
-Follow detailed instructions provided specifically for this example.
-
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
-
-
-## Example folder contents
-
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both).
-
-Below is short explanation of remaining files in the project folder.
-
-```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
+**Build and run**
+```sh
+cd /Users/comqas/esp/modular_benchmark
+. /Users/comqas/esp/esp-idf/export.sh
+idf.py build
+idf.py -p /dev/cu.usbserial-01ED9F2A flash monitor
 ```
 
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
+**Output format**
+- Per-iteration rows: `CSV,op,bits,exp,iter,us`
+- Summary rows: `CSV_SUMMARY,op,bits,exp,iter,success,avg_us,min_us,max_us,stddev_us`
 
-## Troubleshooting
+**Configuration**
+- Iteration counts and enabled benchmarks are configured in `/Users/comqas/esp/modular_benchmark/main/main.c`.
+- The small exponent is computed as the product of up to 5 of the first 9 primes > 2, chosen closest to 20000.
+- Full-domain exponent is a random full-length exponent for the selected bit-size.
+- Task Watchdog is disabled during benchmarking to avoid long-run interruptions.
 
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
+**License**
+GPL-3.0-or-later (see `LICENSE`).

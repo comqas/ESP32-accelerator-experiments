@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it."
+title: "ESP32 Accelerator Experiments"
+type: software
+authors:
+  - name: "comqas"
+version: "1.0.0"
+date-released: "2026-02-11"
+license: "GPL-3.0-or-later"
+repository-code: "https://github.com/comqas/ESP32-accelerator-experiments"
