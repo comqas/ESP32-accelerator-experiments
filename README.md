@@ -16,14 +16,6 @@ Benchmarks for 2048- and 4096-bit modular multiplication and modular exponentiat
 - Hash benchmarks measure end-to-end API timing (setup + hashing + output read-back).
 - Full-domain hash appends a 1-byte counter per hash and concatenates outputs.
 
-**Build and run**
-```sh
-cd ~/esp/modular_benchmark
-. ~/esp/esp-idf/export.sh
-idf.py build
-idf.py -p /dev/cu.usbserial-01ED9F2A flash monitor
-```
-
 **Output format**
 - Per-iteration rows: `CSV,op,bits,exp,iter,us`
 - Summary rows: `CSV_SUMMARY,op,bits,exp,iter,success,avg_us,min_us,max_us,stddev_us`
@@ -35,7 +27,7 @@ idf.py -p /dev/cu.usbserial-01ED9F2A flash monitor
 - The small exponent is computed as the product of up to 5 of the first 9 primes > 2, chosen closest to 20000.
 - Full-domain exponent is a random full-length exponent for the selected bit-size.
 - Task Watchdog is disabled during benchmarking to avoid long-run interruptions.
-- Hash benchmark lengths are configured in `~/esp/modular_benchmark/main/sha_benchmark.c`.
+- Hash benchmark lengths are configured in `main/sha_benchmark.c`.
 
 **License**
 GPL-3.0-or-later (see `LICENSE`).
